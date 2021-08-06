@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="{{url_for('static', filename= 'style.css')}}">
+    <title>Employee Portal</title>
+  </head>
+  <body>
+    <div class="sidenav">
+      <div class="icons">
+        <a href="/landing"><i class="bi bi-house-door" style="font-size: 2rem; color: rgb(120,122,140);"></i></a> <!-- Dashboard -->
+        <a href="/pto"><i class="bi bi-file-earmark-text active" style="font-size: 2rem;"></i></a> <!-- PTO -->
+        <a href="/update/{{ user['id'] }}"><i class="bi bi-gear-fill" style="font-size: 2rem; color: rgb(120,122,140);"></i></a> <!-- My Account -->
+        <a href="/logout"><i class="bi bi-box-arrow-left" style="font-size: 2rem; color: rgb(120,122,140);"></i></a> <!-- Log Out -->
+      </div>
+    </div>
+    <div class="container">
+        <h1> Welcome {{ user['first_name'] }}</h1>
+        <div class="justify pad-inner">
+            <div class="left">
+            <h2>Edit Requested Time Off</h2>
+            <form class="pto-request mt-3" action="/edit-request" method="POST">
+                <input type="hidden" name="id" value="{{ request['id'] }}">
+                <div class="mb-3">
+                <label for="begin" class="form-label">Begin Date: </label>
+                <input type="date" class="form-control" id="begin" name="begin" value="{{ request['begin_date_request'] }}">
+                </div>
+                <div class="mb-3">
+                    <label for="end" class="form-label">End Date: </label>
+                    <input type="date" class="form-control" id="end" name="end" value="{{ request['end_date_request'] }}">
+                </div>
+                <div class="mb-3 ">
+                <label for="reason" class="form-label">Reason: </label>
+                <textarea class="form-control" id="reason" name="reason">{{ request['reason'] }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            </div>
+        </div>
+    </div>  
+  </body>
+</html>

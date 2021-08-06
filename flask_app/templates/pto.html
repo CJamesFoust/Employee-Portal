@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="{{url_for('static', filename= 'style.css')}}">
+    <title>Employee Portal</title>
+  </head>
+  <body>
+    <div class="sidenav">
+      <div class="icons">
+        <a href="/landing"><i class="bi bi-house-door" style="font-size: 2rem; color: rgb(120,122,140);"></i></a> <!-- Dashboard -->
+        <a href="/pto"><i class="bi bi-file-earmark-text active" style="font-size: 2rem;"></i></a> <!-- PTO -->
+        <a href="/update/{{ user['id'] }}"><i class="bi bi-gear-fill" style="font-size: 2rem; color: rgb(120,122,140);"></i></a> <!-- My Account -->
+        <a href="/logout"><i class="bi bi-box-arrow-left" style="font-size: 2rem; color: rgb(120,122,140);"></i></a> <!-- Log Out -->
+      </div>
+    </div>
+    <div class="container">
+        <h1> Welcome {{ user['first_name'] }}</h1>
+        <div class="justify pad-inner">
+            <div class="left">
+            <h2>Request Time Off</h2>
+            <form class="pto-request mt-3 mb-5" action="/submit-request" method="POST">
+                <div class="mb-3">
+                <label for="begin" class="form-label">Begin Date: </label>
+                <input type="date" class="form-control" id="begin" name="begin">
+                </div>
+                <div class="mb-3">
+                    <label for="end" class="form-label">End Date: </label>
+                    <input type="date" class="form-control" id="end" name="end">
+                </div>
+                <div class="mb-3 ">
+                <label for="reason" class="form-label">Reason: </label>
+                <textarea class="form-control" id="reason" name="reason"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            {% with pto = get_flashed_messages(category_filter=['pto']) %}
+                    {% if pto %}
+                        {% for error in pto %}
+                            <p><small class="d-inline mt-5">{{error}}</small></p>
+                        {% endfor %}
+                    {% endif %}
+                  {% endwith %}
+            </div>
+            <div class="right">
+            <h2>Requested Time Off</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">From</th>
+                    <th scope="col">Till</th>
+                    <th scope="col">Date Submitted</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for instance in requests %}
+                <tr>
+                    <td>{{ instance['begin_date_request'].strftime('%b %d, %Y')}}</td>
+                    <td>{{ instance['end_date_request'].strftime('%b %d, %Y')}}</td>
+                    <td>{{ instance['created_at'].strftime('%b %d, %Y')}}</td>
+                    <td><a href="/edit/{{ instance['id'] }}">Edit</a> | <a href="/delete/{{ instance['id'] }}">Delete</a></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>  
+  </body>
+</html>
